@@ -18,7 +18,7 @@ python3 reconstruct_diploid_seq.py \
 
 ```
 
-#### Set missing data
+#### Set missing data on full FASTA
 ```bash
 ## Set missing data on full fasta
 python3 set_missing_data.py \
@@ -36,7 +36,7 @@ python3 remove_invar_from_fasta.py \
 
 ```
 
-#### Set missing data on SNP
+#### Set missing data on SNPs
 ```bash
 python3 set_missing_data.py \
 --input s2_final_data_08Dec2025/diploid_snp.fasta \
