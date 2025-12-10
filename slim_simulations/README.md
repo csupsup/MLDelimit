@@ -38,6 +38,7 @@ python3 remove_invar_from_fasta.py \
 
 #### Set missing data on SNPs
 ```bash
+## Remove missing data on snps
 python3 set_missing_data.py \
 --input s2_final_data_08Dec2025/diploid_snp.fasta \
 --output s2_final_data_08Dec2025/diploid_snp_masked.fasta \
