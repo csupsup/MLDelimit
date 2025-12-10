@@ -18,9 +18,9 @@ python3 reconstruct_diploid_seq.py \
 
 ```
 
-#### Set missing data on full FASTA
+#### Set missing data on full sequence
 ```bash
-## Set missing data on full fasta
+## Set missing data on full sequence
 python3 set_missing_data.py \
 --input diploid_seq.fasta \
 --output diploid_seq_masked.fasta \
