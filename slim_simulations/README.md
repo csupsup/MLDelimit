@@ -1,9 +1,16 @@
 ## Reconstruct Diploid Sequences
 
+### Data needed
+
+* SLiM outputs:
+	1. ancestral_sequence.txt
+	2. sampled_mutations.txt
+
 To reconstruct diploid sequences of sampled individuals, use the custom python scripts above and run the following command in the terminal:
 
 #### Reconstruct
 ```bash
+## Reconstruct diploid sequence
 python3 reconstruct_diploid_seq.py \
 --ancestral ancestral_sequence.txt \
 --mutations sampled_mutations.txt \
