@@ -1,0 +1,180 @@
+// Scenario 3: two-species model with strong barriers
+
+initialize() {
+    defineConstant("K", 500);                       // carrying capacity
+    defineConstant("N", 12);                        // total number of subpopulations
+    defineConstant("M", 0.2);                       // migration probability
+    defineConstant("R", 1.04);                      // mean reproduction
+    defineConstant("L", c(0.2, 0.3, 0.4, 1.0));     // mortality at age (overlapping generations)
+    defineConstant("BP", 1e5);                      // sequence length
+
+    initializeSLiMModelType("nonWF");               // non-Wright-Fisher model
+    initializeSLiMOptions(nucleotideBased=T);       // nucleotide-based 
+    ancestralSeq = randomNucleotides(BP);           // random ancestral sequence
+    defineGlobal("ancestralSeq", ancestralSeq);     // save ancestral sequence
+    
+    initializeAncestralNucleotides(ancestralSeq); 
+    
+    initializeMutationTypeNuc("m1", 0.5, "f", 0.0); // neutral mutations
+    m1.color = "yellow";
+    m1.colorSubstitution = "yellow";
+    m1.convertToSubstitution = F;
+
+    initializeMutationTypeNuc("m2", 0.5, "f", 0.0); // neutral mutations
+    m2.color = "red";
+    m2.colorSubstitution = "red";
+    m2.convertToSubstitution = F;
+    
+    initializeGenomicElementType("g1", m1, 1.0, mmJukesCantor(1e-7)); 
+    initializeGenomicElement(g1, 0, BP - 1); 
+    initializeRecombinationRate(1e-8);
+}
+
+// set reproduction mode
+
+reproduction() {
+    if (individual.age >= 0) {
+        litterSize = rpois(1, R);
+    }
+    for (i in seqLen(litterSize)) {
+        mate = subpop.sampleIndividuals(1, exclude = individual);
+        if (mate.size())
+            subpop.addCrossed(individual, mate);
+    }
+}
+
+// set an initial population of 100 individuals
+
+1 early() {
+    for (i in seqLen(N))
+        sim.addSubpop(i, 100);
+}
+
+// set migration patterns
+
+1:19999 early() {
+    for (source in sim.subpopulations) {
+        srcID = source.id;
+        nSrc = source.individualCount;
+        if (nSrc == 0) continue;
+
+        numLeave = rbinom(1, nSrc, M);
+        if (numLeave == 0) continue;
+
+        migrants = sample(source.individuals, numLeave);
+
+        if (srcID <= 5) possible = 0:5;
+        else possible = 6:11;
+        possible = possible[possible != srcID];
+
+        dests = sample(possible, numLeave, replace=T);
+
+        for (i in seqLen(numLeave)) {
+            tgt = dests[i];
+            sim.subpopulations[tgt].takeMigrants(migrants[i]);
+        }
+    }
+}
+
+// set mutation
+
+10:19999 late() {
+    for (ind in sim.subpopulations.individuals) {
+        subpopID = ind.subpopulation.id;
+
+        if (subpopID >= 6 & subpopID <= 11) {
+            for (mut in ind.haploidGenome1.mutations) {
+                mut.setMutationType(m2);
+            }
+            for (mut in ind.haploidGenome2.mutations) {
+                mut.setMutationType(m2);
+            }
+        } else if (subpopID >= 0 & subpopID <= 5) {
+            for (mut in ind.haploidGenome1.mutations) {
+                mut.setMutationType(m1);
+            }
+            for (mut in ind.haploidGenome2.mutations) {
+                mut.setMutationType(m1);
+            }
+        }
+    }
+}
+
+// life table based individual mortality
+
+early() {
+    inds = sim.subpopulations.individuals;
+    ages = inds.age;
+    mortality = L[ages];
+    survival = 1 - mortality;
+    inds.fitnessScaling = survival;
+
+    for (subpop in sim.subpopulations) {
+        if (subpop.individualCount > K) {
+            subpop.fitnessScaling = K/ (subpop.individualCount * mean(survival));
+            }
+        }
+}
+
+// print generations when running
+late() {
+    if (sim.cycle % 100 == 0)
+        cat("Generation: " + sim.cycle + "\n");
+}
+
+// write output files
+
+19999 late(){
+    sampledIndividuals = NULL;
+    numberInd = 10; // number of individuals to sample per subpopulation
+
+    // sample individuals from each subpopulation
+    for (subpop in sim.subpopulations) {
+        inds = subpop.individuals;
+        if (inds.size() >= numberInd) {
+            sampled = sample(inds, numberInd, replace=F);
+        } else {
+            sampled = inds;
+        }
+        sampledIndividuals = c(sampledIndividuals, sampled);
+    }
+
+    // write mutation data for sampled individuals
+    txtFile = "./sampled_mutations_run" + RUNID + ".txt";
+    writeFile(txtFile, "SampleIndex\tPopulation\tGenomeLabel\tPosition\tDerivedNuc\tMutationType\n");
+
+    sampleIndex = 0;
+    for (ind in sampledIndividuals) {
+        popName = ind.subpopulation.name;
+        for (gIndex in 0:1) {
+            genome = (gIndex == 0) ? ind.haploidGenome1 else ind.haploidGenome2;
+            genomeLabel = paste("ind", sampleIndex, "_g", gIndex + 1, sep="");
+
+            muts = genome.mutations;
+            for (mut in muts) {
+                line = paste(
+                    sampleIndex,
+                    popName,
+                    genomeLabel,
+                    mut.position,
+                    mut.nucleotide,
+                    mut.mutationType.id,
+                    sep="\t"
+                );
+                writeFile(txtFile, line, append=T);
+            }
+        }
+        sampleIndex = sampleIndex + 1;
+    }
+
+    // write ancestral sequence
+    writeFile(
+        "./ancestral_sequence_run_" + RUNID +".txt",
+        ancestralSeq
+    );
+
+    // write sampled individuals to VCF
+    sampledIndividuals.outputIndividualsToVCF(
+        "./sampled_snps_run_" + RUNID + ".vcf"
+    );
+}

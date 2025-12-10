@@ -1,0 +1,271 @@
+// Scenario 2: two-species model with admixture
+
+initialize() {
+    defineConstant("K", 500);                       // carrying capacity
+    defineConstant("N", 12);                        // number of subpopulations
+    defineConstant("M", 0.2);                       // general migration probability
+    defineConstant("R", 1.04);                      // mean reproduction
+    defineConstant("L", c(0.2, 0.3, 0.4, 1.0));     // mortality at age (overlapping generations)
+    defineConstant("BP", 1e5);                      // sequence length
+
+    // custom migration rates between p5 and p6
+    defineConstant("M_P5toP6", 0.01);
+    defineConstant("M_P6toP5", 0.02);
+
+    initializeSLiMModelType("nonWF");               // non-WF model
+    initializeSLiMOptions(nucleotideBased=T);       // nucleotide-based 
+    ancestralSeq = randomNucleotides(BP);           // random ancestral sequence
+    defineGlobal("ancestralSeq", ancestralSeq);     // save ancestral sequence
+
+    initializeAncestralNucleotides(ancestralSeq); 
+
+    initializeMutationTypeNuc("m1", 0.5, "f", 0.0); // neutral mutations
+    m1.color = "yellow";
+    m1.colorSubstitution = "yellow";
+    m1.convertToSubstitution = F;
+
+    initializeMutationTypeNuc("m2", 0.5, "f", 0.0); // neutral mutations
+    m2.color = "red";
+    m2.colorSubstitution = "red";
+    m2.convertToSubstitution = F;
+
+    initializeGenomicElementType("g1", m1, 1.0, mmJukesCantor(1e-7));
+    initializeGenomicElement(g1, 0, BP - 1);
+    initializeRecombinationRate(1e-8);
+}
+
+// set reproduction mode
+
+reproduction() {
+    if (individual.age >= 0) {
+        litterSize = rpois(1, R);
+    }
+    for (i in seqLen(litterSize)) {
+        mate = subpop.sampleIndividuals(1, exclude = individual);
+        if (mate.size())
+            subpop.addCrossed(individual, mate);
+    }
+}
+
+// set an initial population of 100 individuals
+
+1 early() {
+    for (i in 0:(N-1))
+        sim.addSubpop(i, 100);
+}
+
+// set migration patterns
+
+1:19999 early() {
+    inds = sim.subpopulations.individuals;
+
+    numMigrants = rbinom(1, inds.size(), M);
+
+    if (numMigrants > 0) {
+        migrants = sample(inds, numMigrants);
+        currentSubpopID = migrants.subpopulation.id;
+        displacement = integer(migrants.size());
+
+        for (i in seqLen(migrants.size())) {
+            id = currentSubpopID[i];
+
+            if (id >= 0 & id <= 4) {
+                // fully connected p0–p4
+                possibleMoves = 0:4;
+                possibleMoves = possibleMoves[possibleMoves != id];
+
+                // unidirectional p4 -> p5
+                if (id == 4) possibleMoves = c(possibleMoves, 5);
+                displacement[i] = sample(possibleMoves, 1) - id;
+
+            } else if (id >= 7 & id <= 11) {
+                // fully connected p7–p11
+                possibleMoves = 7:11;
+                possibleMoves = possibleMoves[possibleMoves != id];
+
+                // unidirectional p7 -> p6
+                if (id == 7) possibleMoves = c(possibleMoves, 6);
+                displacement[i] = sample(possibleMoves, 1) - id;
+
+            } else if (id == 5 | id == 6) {
+                // no migration between p5 and p6
+                displacement[i] = 0;
+            } else {
+                displacement[i] = 0;
+            }
+        }
+
+        newSubpopID = currentSubpopID + displacement;
+        actuallyMoving = (newSubpopID >= 0) & (newSubpopID < N);
+
+        if (sum(actuallyMoving) > 0) {
+            migrants = migrants[actuallyMoving];
+            newSubpopID = newSubpopID[actuallyMoving];
+
+            for (subpop in sim.subpopulations)
+                subpop.takeMigrants(migrants[newSubpopID == subpop.id]);
+        }
+    }
+}
+
+// add m2 mutations
+
+15000:19999 late() {
+    for (ind in sim.subpopulations.individuals) {
+        subpopID = ind.subpopulation.id;
+
+        if (subpopID == 5 | subpopID == 6) {
+            for (mut in ind.haploidGenome1.mutations)
+                mut.setMutationType(m2);
+            for (mut in ind.haploidGenome2.mutations)
+                mut.setMutationType(m2);
+        } else {
+            for (mut in ind.haploidGenome1.mutations)
+                mut.setMutationType(m1);
+            for (mut in ind.haploidGenome2.mutations)
+                mut.setMutationType(m1);
+        }
+    }
+}
+
+// set admixture patterns
+
+15000:19999 late() {
+    inds = sim.subpopulations.individuals;
+
+    // set migration between p5 and p6
+    pop5 = sim.subpopulations[5];
+    pop6 = sim.subpopulations[6];
+
+    nP5toP6 = rbinom(1, pop5.individualCount, M_P5toP6);
+    if (nP5toP6 > 0)
+        pop6.takeMigrants(sample(pop5.individuals, nP5toP6));
+
+    nP6toP5 = rbinom(1, pop6.individualCount, M_P6toP5);
+    if (nP6toP5 > 0)
+        pop5.takeMigrants(sample(pop6.individuals, nP6toP5));
+
+    // retain fully-connected migration patterns
+
+    numMigrants = rbinom(1, inds.size(), M);
+    if (numMigrants > 0) {
+        migrants = sample(inds, numMigrants);
+        currentSubpopID = migrants.subpopulation.id;
+        displacement = integer(migrants.size());
+
+        for (i in seqLen(migrants.size())) {
+            id = currentSubpopID[i];
+
+            if (id >= 0 & id <= 4) {
+                possibleMoves = 0:4;
+                possibleMoves = possibleMoves[possibleMoves != id];
+
+                if (id == 4) possibleMoves = c(possibleMoves, 5);
+                displacement[i] = sample(possibleMoves, 1) - id;
+
+            } else if (id >= 7 & id <= 11) {
+                possibleMoves = 7:11;
+                possibleMoves = possibleMoves[possibleMoves != id];
+
+                if (id == 7) possibleMoves = c(possibleMoves, 6);
+                displacement[i] = sample(possibleMoves, 1) - id;
+
+            } else if (id == 5 | id == 6) {
+
+                displacement[i] = 0;
+            } else {
+                displacement[i] = 0; 
+            }
+        }
+
+        newSubpopID = currentSubpopID + displacement;
+        actuallyMoving = (newSubpopID >= 0) & (newSubpopID < N);
+
+        if (sum(actuallyMoving) > 0) {
+            migrants = migrants[actuallyMoving];
+            newSubpopID = newSubpopID[actuallyMoving];
+
+            for (subpop in sim.subpopulations)
+                subpop.takeMigrants(migrants[newSubpopID == subpop.id]);
+        }
+    }
+}
+
+// life table based individual mortality
+
+early() {    
+    inds = sim.subpopulations.individuals;
+    ages = inds.age;
+    mortality = L[ages];
+    survival = 1 - mortality;
+    inds.fitnessScaling = survival;
+
+    for (subpop in sim.subpopulations) {
+        if (subpop.individualCount > K) {
+            subpop.fitnessScaling = K/subpop.individualCount;
+            }
+        }
+}
+
+// print generations when running
+late() {
+    if (sim.cycle % 100 == 0)
+        cat("Generation: " + sim.cycle + "\n");
+}
+
+// write outputs files
+
+19999 late() {
+    sampledIndividuals = NULL;
+    numberInd = 10; // number of individuals to sample per subpopulation
+
+    // sample individuals from each subpopulation
+    for (subpop in sim.subpopulations) {
+        inds = subpop.individuals;
+        if (inds.size() >= numberInd) {
+            sampled = sample(inds, numberInd, replace=F);
+        } else {
+            sampled = inds;
+        }
+        sampledIndividuals = c(sampledIndividuals, sampled);
+    }
+
+    // write mutation data for sampled individuals
+    txtFile = "./sampled_mutations_run" + RUNID + ".txt";
+    writeFile(txtFile, "SampleIndex\tPopulation\tGenomeLabel\tPosition\tDerivedNuc\tMutationType\n");
+
+    sampleIndex = 0;
+    for (ind in sampledIndividuals) {
+        popName = ind.subpopulation.name;
+        for (gIndex in 0:1) {
+            genome = (gIndex == 0) ? ind.haploidGenome1 else ind.haploidGenome2;
+            genomeLabel = paste("ind", sampleIndex, "_g", gIndex + 1, sep="");
+
+            muts = genome.mutations;
+            for (mut in muts) {
+                line = paste(
+                    sampleIndex,
+                    popName,
+                    genomeLabel,
+                    mut.position,
+                    mut.nucleotide,
+                    mut.mutationType.id,
+                    sep="\t"
+                );
+                writeFile(txtFile, line, append=T);
+            }
+        }
+        sampleIndex = sampleIndex + 1;
+    }
+
+    // write ancestral sequence
+    writeFile(
+        "./ancestral_sequence_run_" + RUNID +".txt",
+        ancestralSeq
+    );
+
+    // write sampled individuals to VCF
+    sampledIndividuals.outputIndividualsToVCF(
+        "./sampled_snps_run_" + RUNID + ".vcf"
+    );
+}

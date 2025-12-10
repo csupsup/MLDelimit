@@ -1,0 +1,148 @@
+// Scenario 1 (null model): single species with fully connected populations
+
+initialize() {
+    defineConstant("K", 500);                       // carrying capacity
+    defineConstant("N", 12);                        // total number of subpopulations
+    defineConstant("M", 0.2);                       // migration probability
+    defineConstant("R", 1.04);                      // mean reproduction
+    defineConstant("L", c(0.2, 0.3, 0.4, 1.0));     // mortality at age (overlapping generations)
+    defineConstant("BP", 1e5);                      // sequence length
+
+    initializeSLiMModelType("nonWF");               // non-WF model
+    initializeSLiMOptions(nucleotideBased=T);       // nucleotide-based 
+    ancestralSeq = randomNucleotides(BP);           // random ancestral sequence
+    defineGlobal("ancestralSeq", ancestralSeq);     // save ancestral sequence
+    
+    initializeAncestralNucleotides(ancestralSeq); 
+    
+    initializeMutationTypeNuc("m1", 0.5, "f", 0.0); // neutral mutations
+    m1.color = "yellow";
+    m1.colorSubstitution = "yellow";
+    m1.convertToSubstitution = F;
+    
+    initializeGenomicElementType("g1", m1, 1.0, mmJukesCantor(1e-7)); // neutral mutations
+    initializeGenomicElement(g1, 0, BP - 1); 
+    initializeRecombinationRate(1e-8);
+}
+
+// set reproduction mode 
+
+reproduction() {
+    if (individual.age >= 0) {
+        litterSize = rpois(1, R);
+    }
+    for (i in seqLen(litterSize)) {
+        mate = subpop.sampleIndividuals(1, exclude = individual);
+        if (mate.size())
+            subpop.addCrossed(individual, mate);
+    }
+}
+
+// set an initial population of 100 individuals
+
+1 early() {
+    for (i in seqLen(N))
+        sim.addSubpop(i, 100);
+}
+
+// set migration pattern
+
+1:1999 early() {
+    inds = sim.subpopulations.individuals;
+
+    // select migrants from all individuals at rate M
+    numMigrants = rbinom(1, inds.size(), M);
+
+    if (numMigrants) {
+        migrants = sample(inds, numMigrants);
+
+        // assign each migrant a random new subpopulation
+        newSubpopIDs = sample(0:(N-1), migrants.size(), replace=T);
+
+        // distribute migrants to their new subpopulations
+        for (subpop in sim.subpopulations) {
+            migratingToSubpop = migrants[newSubpopIDs == subpop.id];
+            if (migratingToSubpop.size() > 0) {
+                subpop.takeMigrants(migratingToSubpop);
+            }
+        }
+    }
+}
+
+// life table based individual mortality
+early (){
+    inds = sim.subpopulations.individuals;
+    ages = inds.age;
+    mortality = L[ages];
+    survival = 1 - mortality;
+    inds.fitnessScaling = survival;
+
+    for (subpop in sim.subpopulations) {
+        if (subpop.individualCount > K) {
+            subpop.fitnessScaling = K/ (subpop.individualCount * mean(survival));
+            }
+        }
+}
+
+// print generations when running
+late() {
+    if (sim.cycle % 100 == 0)
+        cat("Generation: " + sim.cycle + "\n");
+}
+
+// write outputs files
+
+1999 late() {
+    sampledIndividuals = NULL;
+    numberInd = 10; // number of individuals to sample per subpopulation
+
+    // sample individuals from each subpopulation
+    for (subpop in sim.subpopulations) {
+        inds = subpop.individuals;
+        if (inds.size() >= numberInd) {
+            sampled = sample(inds, numberInd, replace=F);
+        } else {
+            sampled = inds;
+        }
+        sampledIndividuals = c(sampledIndividuals, sampled);
+    }
+
+    // write mutation data for sampled individuals
+    txtFile = "./sampled_mutations_run" + RUNID + ".txt";
+    writeFile(txtFile, "SampleIndex\tPopulation\tGenomeLabel\tPosition\tDerivedNuc\tMutationType\n");
+
+    sampleIndex = 0;
+    for (ind in sampledIndividuals) {
+        popName = ind.subpopulation.name;
+        for (gIndex in 0:1) {
+            genome = (gIndex == 0) ? ind.haploidGenome1 else ind.haploidGenome2;
+            genomeLabel = paste("ind", sampleIndex, "_g", gIndex + 1, sep="");
+
+            muts = genome.mutations;
+            for (mut in muts) {
+                line = paste(
+                    sampleIndex,
+                    popName,
+                    genomeLabel,
+                    mut.position,
+                    mut.nucleotide,
+                    mut.mutationType.id,
+                    sep="\t"
+                );
+                writeFile(txtFile, line, append=T);
+            }
+        }
+        sampleIndex = sampleIndex + 1;
+    }
+
+    // write the ancestral sequence
+    writeFile(
+        "./ancestral_sequence_run_" + RUNID +".txt",
+        ancestralSeq
+    );
+
+    // write sampled individuals to VCF
+    sampledIndividuals.outputIndividualsToVCF(
+        "./sampled_snps_run_" + RUNID + ".vcf"
+    );
+}
