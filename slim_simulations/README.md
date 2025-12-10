@@ -1,0 +1,39 @@
+## Reconstruct Diploid Sequences
+
+To reconstruct diploid sequences of sampled individuals, use the custom python scripts above and run the following command in the terminal:
+
+#### Reconstruct
+```bash
+python3 reconstruct_diploid_seq.py \
+--ancestral ancestral_sequence.txt \
+--mutations sampled_mutations.txt \
+--output diploid_seq.fasta
+
+```
+
+#### Set missing data
+```bash
+## Set missing data on full fasta
+python3 set_missing_data.py \
+--input diploid_seq.fasta \
+--output diploid_seq_masked.fasta \
+--percent 10  --cblock 10 --limit 10 --single_prob 0.5
+```
+
+#### Remove invariant sites to get SNPs
+```bash
+## Remove invariant sites
+python3 remove_invar_from_fasta.py \
+--input diploid_seq.fasta \
+--output diploid_snp.fasta
+
+```
+
+#### Set missing data on SNP
+```bash
+python3 set_missing_data.py \
+--input s2_final_data_08Dec2025/diploid_snp.fasta \
+--output s2_final_data_08Dec2025/diploid_snp_masked.fasta \
+--percent 10  --cblock 10 --limit 10 --single_prob 0.5
+
+```
