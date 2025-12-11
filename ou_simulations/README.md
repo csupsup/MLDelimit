@@ -28,7 +28,7 @@ where:
 
 ### OU morph simulation arguments
 ```bash
-options:
+Options:
   --help            	Check arguments
   --input 				Input Newick tree file
   --output 				Output directory to write simulated traits
