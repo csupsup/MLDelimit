@@ -1,6 +1,6 @@
 ## OU Morphlogy/Trait Simulation
 
-**Ornstein-Uhlenbeck (OU) Model is expressed as:**
+Ornstein-Uhlenbeck (OU) Model is expressed as:
 
 $$
 \mathbf{X}(t) = \mathbf{X}_0 e^{-\alpha t} + \boldsymbol{\theta} \left(1 - e^{-\alpha t}\right) + \boldsymbol{\varepsilon}
