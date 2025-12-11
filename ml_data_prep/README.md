@@ -6,6 +6,7 @@ To perform ML analysis with iDEC, VaDE, and SOM, all data types must be combined
 
 * Morphology/Environment data in CSV file
 * DNA sequences in FASTA file
+* A popmap file containing the population assignment of each sample
 
 ### Filter datasets
 ```bash
