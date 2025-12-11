@@ -48,14 +48,14 @@ def main():
     parser.add_argument("--output", "-o", required=True, help="Output FASTA file")
     args = parser.parse_args()
 
-    # Print parsed arguments
+    ## Print arguments
     print("Arguments:")
     print(f"  input  : {args.input}")
     print(f"  output : {args.output}\n")
 
     seqs = read_fasta(args.input)
 
-    # Sanity check: all sequences same length
+    ## Check sequences length
     lengths = {len(s) for s in seqs.values()}
     if len(lengths) != 1:
         raise ValueError("Error: sequences are not aligned or not equal length.")
