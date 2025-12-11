@@ -12,7 +12,7 @@ $$
 
 where:
 
-* $\mathbf{X}(t)$ is the trait value at time $t$ 
+* $\mathbf{X}(t)$ is the trait value at time $t$ (or at a descendant node)
 * $\mathbf{X}_0$ is the ancestral trait value
 * $\alpha$ is the strength of selection toward the optimum  
 * $\boldsymbol{\theta}$ is the optimal trait value  
