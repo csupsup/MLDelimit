@@ -18,7 +18,7 @@ where:
 * $\mathbf{X}_0$ is the ancestral trait value
 * $\alpha$ is the strength of selection toward the optimum  
 * $\boldsymbol{\theta}$ is the optimal trait value  
-* $\sigma^2$ is the stochastic fluctuations (Brownian Motion)
+* $\sigma^2$ is the rate of stochastic fluctuations (Brownian Motion)
 * $t$ is the branch length (time from root to tip)  
 * $\boldsymbol{\varepsilon}$ is the normally distributed stochastic term
 
@@ -34,7 +34,7 @@ options:
   --output 				Output directory to write simulated traits
   --n_traits			Number of traits
   --alpha				Alpha (selection strength)
-  --sigma				Sigma (rate of drift)
+  --sigma				Sigma (rate of stochastic fluctuations)
   --root_state			Optional root state values (comma-separated)
   --theta				Optional OU optima θ values (comma-separated)
   --n_simulations 		Number of simulations to average over
