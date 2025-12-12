@@ -14,7 +14,7 @@ The following demonstrates the conversion of a genomic SNP VCF file to FASTA for
 ```bash
 ## Use the 'vcf2phylip' tool from https://github.com/edgardomortiz/vcf2phylip
 python3 vcf2phylip.py \
---input gono_rad_75snps_thinned.vcf \
+--input gono_filtered_75snps.vcf \
 --phylip-disable \
 --fasta \
 --output-folder .
