@@ -1,6 +1,6 @@
 ## iDEC for Joint Species Delimitation
 
-We developed two implementations of Improved Deep Embedded Clustering (iDEC) adapted from Guo et al. (2017) to simultaneously learn low-dimensional representations and clustering assignments from multiple data types, such as genetic, morphological, and environmental data. A single-modal iDEC uses only one neural network architecture, where all data types are compressed into a single latent representation. A multi-modal iDEC features three neural network architectures, meaning it has separate encoders and decoders for each data type, with each latent representation concatenated. The latent representations are learned jointly with soft clustering optimized via a KL-divergence-based clustering loss. Additionally, we included an ablation comparison to evaluate the clustering results between pairs of data types using the Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) metrics.
+We developed two implementations of Improved Deep Embedded Clustering (iDEC) adapted from Guo et al. (2017) to simultaneously learn low-dimensional representations and clustering assignments from multiple data types, such as genetic, morphological, and environmental data. A single-modal iDEC uses only one neural network architecture, where all data types are compressed into a single latent representation. A multi-modal iDEC features three neural network architectures, meaning it has separate encoders and decoders for each data type, with concatenated latent representation. The latent representations are learned jointly with soft clustering optimized via a KL-divergence-based clustering loss. Additionally, we included an ablation comparison to evaluate the clustering results among pairs of data types using the Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) metrics.
 
 Below shows the summary of the implementation.
 
@@ -19,7 +19,7 @@ where
 Each feature is standardized as:
 
 $$
-\mathbf{X} \leftarrow \frac{\mathbf{X} - \boldsymbol{\mu}}{\boldsymbol{\sigma}}
+\mathbf{X} \ = \frac{\mathbf{X} - \boldsymbol{\mu}}{\boldsymbol{\sigma}}
 $$
 
 * $\mathbf{X} \in \mathbb{R}^{N \times D}$ is the input feature matrix (samples $\times$ features).
@@ -154,7 +154,7 @@ $$
 * $M$ is the total number of modalities.
 * $L = \sum_{m=1}^{M} L_m$ is the total latent dimension (sum of modality-specific latent dimensions).
 
-decoded with:
+then decoded:
 
 $$
 \hat{\mathbf{x}}_i^m = g_{\phi_m}(\mathbf{z}_i)
@@ -165,7 +165,7 @@ $$
 * $\phi_m$ are the trainable parameters of the decoder.
 * $\mathbf{z}_i \in \mathbb{R}^{L}$ is the concatenated latent vector of sample $i$ across all modalities.
 
-and minimizes the MSE across all modalities:
+and the MSE across all modalities are minimized:
 
 $$
 \mathcal{L}_{\mathrm{recon}} = \sum_{m=1}^{M} \frac{1}{N} \sum_{i=1}^{N} \| \hat{\mathbf{x}}_i^m - \mathbf{x}_i^m \|_2^2
