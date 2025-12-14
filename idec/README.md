@@ -126,7 +126,6 @@ $$
 \text{NMI} = \frac{2 I(\mathbf{y}_{\text{full}}; \mathbf{y}_{\text{ablation}})}{H(\mathbf{y}_{\text{full}}) + H(\mathbf{y}_{\text{ablation}})}
 $$
 
-* $\(\text{ARI}(\mathbf{y}_{\text{full}}, \mathbf{y}_{\text{ablation}})\)$
 * $\text{ARI}(\mathbf{y}_{\text{full}}, \mathbf{y}_{\text{ablation}})$ is the Adjusted Rand Index comparing full and ablation clusterings.
 * $\text{NMI}(\mathbf{y}_{\text{full}}, \mathbf{y}_{\text{ablation}})$ is the Normalized Mutual Information.
 * $n_{ij}$ is the contingency table entry, $a_i$ and $b_j$ are cluster sums, and $N$ is the number of samples.
