@@ -10,7 +10,9 @@ Below shows the summary of the implementation.
 #### Data preparation
 Let the input data matrix be:
 
-$\mathbf{X} \in \mathbb{R}^{N \times D}$
+$$
+\mathbf{X} \in \mathbb{R}^{N \times D}
+$$
 
 where
 * $\textit{N}$ is the number of samples.
@@ -18,7 +20,9 @@ where
 
 Each feature is standardized as:
 
-$\mathbf{X} \leftarrow \frac{\mathbf{X} - \boldsymbol{\mu}}{\boldsymbol{\sigma}}$
+$$
+\mathbf{X} \leftarrow \frac{\mathbf{X} - \boldsymbol{\mu}}{\boldsymbol{\sigma}}
+$$
 
 * $\mathbf{X} \in \mathbb{R}^{N \times D}$ is the input feature matrix (samples $\times$ features).
 * $\boldsymbol{\mu} \in \mathbb{R}^{1 \times D}$ is the mean vector of each feature.  
@@ -29,8 +33,9 @@ For the ablation study, missing modalities are zero-masked while keeping the dim
 
 #### Autoencoder Architecture
 The model uses a fully connected autoencoder where the encoder maps each input sample to a latent representation:
-
-$\mathbf{z}_i = f_{\theta}(\mathbf{x}_i), \quad \mathbf{z}_i \in \mathbb{R}^{L}$
+$$
+\mathbf{z}_i = f_{\theta}(\mathbf{x}_i), \quad \mathbf{z}_i \in \mathbb{R}^{L}
+$$
 
 * $\mathbf{x}_i \in \mathbb{R}^{D}$ is the input feature vector for sample $i$. 
 * $f_{\theta}(\cdot)$ is the encoder function implemented as a deep neural network.
@@ -38,16 +43,18 @@ $\mathbf{z}_i = f_{\theta}(\mathbf{x}_i), \quad \mathbf{z}_i \in \mathbb{R}^{L}$
 * $\mathbf{z}_i \in \mathbb{R}^{L}$ is the latent representation of sample $i$ and $L$ is the dimensionality of the latent space.
 
 then, the decoder reconstructs the input from the latent space:
-
-$\hat{\mathbf{x}}_i = g_{\phi}(\mathbf{z}_i)$
+$$
+\hat{\mathbf{x}}_i = g_{\phi}(\mathbf{z}_i)
+$$
 
 * $g_{\phi}(\cdot)$ is the decoder function (deep neural network).
 * $\phi$ are the trainable parameters of the decoder
 * $\hat{\mathbf{x}}_i \in \mathbb{R}^{D}$ is the reconstructed input of sample $i$.
 
 with mean squared error (MSE) reconstruction loss:
-
-$\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \left\| \hat{\mathbf{x}}_i - \mathbf{x}_i \right\|_2^2$
+$$
+\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \left\| \hat{\mathbf{x}}_i - \mathbf{x}_i \right\|_2^2
+$$
 
 * $\mathcal{L}_{\text{recon}}$ is the reconstruction loss.
 * $N$ is the number of samples
@@ -55,8 +62,9 @@ $\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \left\| \hat{\mathbf{x}
 
 #### K-means initialization
 Cluster centers are initialized with K-means:
-
-$\{ \boldsymbol{\mu}_j \}_{j=1}^{K} = \text{KMeans}(\{ \mathbf{z}_i \}_{i=1}^{N})$
+$$
+\{ \boldsymbol{\mu}_j \}_{j=1}^{K} = \text{KMeans}(\{ \mathbf{z}_i \}_{i=1}^{N})
+$$
 
 * $K$ is the number of clusters.
 * $\mathbf{Z} = \{\mathbf{z}_i\}_{i=1}^N$ are latent embeddings.
@@ -64,8 +72,9 @@ $\{ \boldsymbol{\mu}_j \}_{j=1}^{K} = \text{KMeans}(\{ \mathbf{z}_i \}_{i=1}^{N}
 
 #### Soft Cluster Assignment
 Soft assignments are computed using the Student's t-distribution:
-
-$q_{ij} = \frac{\left(1 + \frac{\| \mathbf{z}_i - \boldsymbol{\mu}_j \|^2}{\alpha} \right)^{-\frac{\alpha+1}{2}}}{\sum_{j'=1}^{K} \left(1 + \frac{\| \mathbf{z}_i - \boldsymbol{\mu}_{j'} \|^2}{\alpha} \right)^{-\frac{\alpha+1}{2}}}$
+$$
+q_{ij} = \frac{\left(1 + \frac{\| \mathbf{z}_i - \boldsymbol{\mu}_j \|^2}{\alpha} \right)^{-\frac{\alpha+1}{2}}}{\sum_{j'=1}^{K} \left(1 + \frac{\| \mathbf{z}_i - \boldsymbol{\mu}_{j'} \|^2}{\alpha} \right)^{-\frac{\alpha+1}{2}}}
+$$
 
 * $q_{ij}$ is the soft assignment probability of sample $i$ to cluster $j$. 
 * $\mathbf{z}_i$ is the latent embedding. 
