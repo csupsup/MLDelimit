@@ -71,7 +71,7 @@ $$
 $$
 
 * $K$ is the number of clusters.
-* $\{\mathbf{z}_i\}_{i=1}^N$ are latent embeddings. 
+* $\mathbf{Z} = \{\mathbf{z}_i\}_{i=1}^N$ are latent embeddings. 
 * $\boldsymbol{\mu}_j \in \mathbb{R}^{L}$ is the center of cluster $j$.
 
 #### Soft Cluster Assignment
@@ -248,5 +248,5 @@ python3 idec_multi_modal.py \
 --wrap_width 30
 ```
 
-### References
+### Reference
 Guo, X., L. Gao, X. Liu, and J. Yin. 2017. Improved Deep Embedded Clustering with Local Structure Preservation. Pp. 1753–1759 in Proceedings of the Twenty-Sixth International Joint Conference on Artificial Intelligence. International Joint Conferences on Artificial Intelligence Organization, Melbourne, Australia.
