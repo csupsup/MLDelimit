@@ -1,7 +1,5 @@
 ## iDEC for Joint Species Delimitation
 
-### Overview
-
 We developed two implementations of Improved Deep Embedded Clustering (iDEC) adapted from Guo et al. (2017) to simultaneously learn low-dimensional representations and clustering assignments from multiple data types, such as genetic, morphological, and environmental data. A single-modal iDEC uses only one neural network architecture, where all data types are compressed into a single latent representation. A multi-modal iDEC features three neural network architectures, meaning it has separate encoders and decoders for each data type, with each latent representation concatenated. The latent representations are learned jointly with soft clustering optimized via a KL-divergence-based clustering loss. Additionally, we included an ablation comparison to evaluate the clustering results between pairs of data types using the Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) metrics.
 
 Below shows the summary of the implementation.
@@ -128,7 +126,7 @@ $$
 \text{NMI} = \frac{2 I(\mathbf{y}_{\text{full}}; \mathbf{y}_{\text{ablation}})}{H(\mathbf{y}_{\text{full}}) + H(\mathbf{y}_{\text{ablation}})}
 $$
 
-* $$\text{ARI}(\mathbf{y}_{\text{full}}, \mathbf{y}_{\text{ablation}})$$ is the Adjusted Rand Index comparing full and ablation clusterings.
+* $\text{ARI}(\mathbf{y}_{\text{full}}, \mathbf{y}_{\text{ablation}})$ is the Adjusted Rand Index comparing full and ablation clusterings.
 * $\text{NMI}(\mathbf{y}_{\text{full}}, \mathbf{y}_{\text{ablation}})$ is the Normalized Mutual Information.
 * $n_{ij}$ is the contingency table entry, $a_i$ and $b_j$ are cluster sums, and $N$ is the number of samples.
 
@@ -184,7 +182,7 @@ $$
 Options:
   --input				Input CSV containing morphology, environment, and dna data.
   --plots_dir 			Directory to write plots.
-  --outputs_dir 		Directory to write latent space, cluster assingments, and other outputs.
+  --outputs_dir 		Directory to write latent space, cluster assignments, and other outputs.
   --latent_dim			Latent dimension.
   --n_iter				Number of iDEC training iterations.
   --update_interval 	Update interval for cluster centers.
@@ -218,7 +216,7 @@ python3 idec_single_delimit.py \
 Options:
   --input		        Input CSV containing morphology, environment, and dna.
   --plots_dir			Directory to write plots.
-  --outputs_dir			Directory to write latent space, cluster assingments, and other outputs.
+  --outputs_dir			Directory to write latent space, cluster assignments, and other outputs.
   --latent_per_mod		Latent dimension per modality.
   --n_iter				Number of iDEC training iterations.
   --update_interval		Update interval for cluster centers.
