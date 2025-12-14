@@ -33,6 +33,7 @@ For the ablation study, missing modalities are zero-masked while keeping the dim
 
 #### Autoencoder Architecture
 The model uses a fully connected autoencoder where the encoder maps each input sample to a latent representation:
+
 $$
 \mathbf{z}_i = f_{\theta}(\mathbf{x}_i), \quad \mathbf{z}_i \in \mathbb{R}^{L}
 $$
@@ -43,6 +44,7 @@ $$
 * $\mathbf{z}_i \in \mathbb{R}^{L}$ is the latent representation of sample $i$ and $L$ is the dimensionality of the latent space.
 
 then, the decoder reconstructs the input from the latent space:
+
 $$
 \hat{\mathbf{x}}_i = g_{\phi}(\mathbf{z}_i)
 $$
@@ -52,6 +54,7 @@ $$
 * $\hat{\mathbf{x}}_i \in \mathbb{R}^{D}$ is the reconstructed input of sample $i$.
 
 with mean squared error (MSE) reconstruction loss:
+
 $$
 \mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \left\| \hat{\mathbf{x}}_i - \mathbf{x}_i \right\|_2^2
 $$
@@ -62,6 +65,7 @@ $$
 
 #### K-means initialization
 Cluster centers are initialized with K-means:
+
 $$
 \{ \boldsymbol{\mu}_j \}_{j=1}^{K} = \text{KMeans}(\{ \mathbf{z}_i \}_{i=1}^{N})
 $$
@@ -72,6 +76,7 @@ $$
 
 #### Soft Cluster Assignment
 Soft assignments are computed using the Student's t-distribution:
+
 $$
 q_{ij} = \frac{\left(1 + \frac{\| \mathbf{z}_i - \boldsymbol{\mu}_j \|^2}{\alpha} \right)^{-\frac{\alpha+1}{2}}}{\sum_{j'=1}^{K} \left(1 + \frac{\| \mathbf{z}_i - \boldsymbol{\mu}_{j'} \|^2}{\alpha} \right)^{-\frac{\alpha+1}{2}}}
 $$
@@ -82,6 +87,7 @@ $$
 * $\alpha$ is the degree of freedom parameter (default 1.0)
 
 and the t-distribution is sharpened:
+
 $$
 p_{ij} = \frac{\frac{q_{ij}^2}{\sum_{i=1}^{N} q_{ij}}}{\sum_{j'=1}^{K} \frac{q_{ij'}^2}{\sum_{i=1}^{N} q_{ij'}}}
 $$
@@ -90,6 +96,7 @@ $$
 * $q_{ij}$ is the soft assignment probability.
 
 with KL-Divergence clustering loss:
+
 $$
 \mathcal{L}_{\text{cluster}} = \frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{K} p_{ij} \log \left( \frac{p_{ij}}{q_{ij}} \right)
 $$
@@ -100,6 +107,7 @@ $$
 
 #### iDEC total loss
 Final iDEC optimization is:
+
 $$
 \mathcal{L} = \mathcal{L}_{\text{recon}} + \gamma \, \mathcal{L}_{\text{cluster}}
 $$
@@ -111,6 +119,7 @@ $$
 
 #### Ablation metrics
 Metrics include:
+
 $$
 \text{ARI} = \frac{\sum_{ij} \binom{n_{ij}}{2} - \left[\sum_i \binom{a_i}{2} \sum_j \binom{b_j}{2}\right]/\binom{N}{2}}{\frac{1}{2} \left[\sum_i \binom{a_i}{2} + \sum_j \binom{b_j}{2}\right] - \left[\sum_i \binom{a_i}{2} \sum_j \binom{b_j}{2}\right]/\binom{N}{2}}
 $$
@@ -125,6 +134,7 @@ $$
 
 ### Multi-modal iDEC (iDEC-Multi)
 The implementation of iDEC-Multi is the same as iDEC-Single, except for multiple modalities where each is mapped to a latent space using the following encoder:
+
 $$
 \mathbf{z}_i^m = f_{\theta_m}(\mathbf{x}_i^m)
 $$
@@ -136,6 +146,7 @@ $$
 * $L_m$ is the latent dimension per modality.
 
 with the latent embeddings from all modalities are concatenated:
+
 $$
 \mathbf{z}_i = [\mathbf{z}_i^1, \mathbf{z}_i^2, \dots, \mathbf{z}_i^M] \in \mathbb{R}^{L}
 $$
@@ -146,6 +157,7 @@ $$
 * $L = \sum_{m=1}^{M} L_m$ is the total latent dimension (sum of modality-specific latent dimensions).
 
 decoded with:
+
 $$
 \hat{\mathbf{x}}_i^m = g_{\phi_m}(\mathbf{z}_i)
 $$
@@ -156,6 +168,7 @@ $$
 * $\mathbf{z}_i \in \mathbb{R}^{L}$ is the concatenated latent vector of sample $i$ across all modalities.
 
 and minimizes the MSE across all modalities:
+
 $$
 \mathcal{L}_{\mathrm{recon}} = \sum_{m=1}^{M} \frac{1}{N} \sum_{i=1}^{N} \| \hat{\mathbf{x}}_i^m - \mathbf{x}_i^m \|_2^2
 $$
