@@ -9,9 +9,7 @@ Below shows the summary of the implementation.
 ### Single-modal iDEC (iDEC-Single)
 #### Data preparation
 Let the input data matrix be:
-$$
-\mathbf{X} \in \mathbb{R}^{N \times D}
-$$
+$\mathbf{X} \in \mathbb{R}^{N \times D}$
 
 where
 * $\textit{N}$ is the number of samples.
