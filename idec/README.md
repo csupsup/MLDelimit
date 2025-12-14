@@ -1,8 +1,8 @@
-## Improved Deep Embedded Clustering (iDEC) for Joint Species Delimitation
+## iDEC for Joint Species Delimitation
 
 ### Overview
 
-We developed two implementations of iDEC adapted from Guo et al. (2017) to simultaneously learn low-dimensional representations and clustering assignments from multiple data types, such as genetic, morphological, and environmental data. A single-modal iDEC uses only one neural network architecture, where all data types are compressed into a single latent representation. A multi-modal iDEC features three neural network architectures, meaning it has separate encoders and decoders for each data type, with each latent representation concatenated. The latent representations are learned jointly with soft clustering optimized via a KL-divergence-based clustering loss. Additionally, we included an ablation comparison to evaluate the clustering results between pairs of data types using the Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) metrics.
+We developed two implementations of Improved Deep Embedded Clustering (iDEC) adapted from Guo et al. (2017) to simultaneously learn low-dimensional representations and clustering assignments from multiple data types, such as genetic, morphological, and environmental data. A single-modal iDEC uses only one neural network architecture, where all data types are compressed into a single latent representation. A multi-modal iDEC features three neural network architectures, meaning it has separate encoders and decoders for each data type, with each latent representation concatenated. The latent representations are learned jointly with soft clustering optimized via a KL-divergence-based clustering loss. Additionally, we included an ablation comparison to evaluate the clustering results between pairs of data types using the Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI) metrics.
 
 Below shows the summary of the implementation.
 
@@ -233,3 +233,5 @@ python3 idec_multi_modal.py \
 --wrap_width 30
 ```
 
+### References
+Guo, X., L. Gao, X. Liu, and J. Yin. 2017. Improved Deep Embedded Clustering with Local Structure Preservation. Pp. 1753–1759 in Proceedings of the Twenty-Sixth International Joint Conference on Artificial Intelligence. International Joint Conferences on Artificial Intelligence Organization, Melbourne, Australia.
