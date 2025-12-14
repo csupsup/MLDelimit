@@ -71,7 +71,9 @@ $$
 $$
 
 * $K$ is the number of clusters.
-* $\mathbf{Z} = \{\mathbf{z}_i\}_{i=1}^N$ are latent embeddings.
+
+* $\mathbf{Z} = \{\mathbf{z}_i\}_{i=1}^N$ are latent embeddings. 
+
 * $\boldsymbol{\mu}_j \in \mathbb{R}^{L}$ is the center of cluster $j$.
 
 #### Soft Cluster Assignment
