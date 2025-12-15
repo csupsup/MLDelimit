@@ -37,7 +37,7 @@ python3 set_vcf_missing.py \
 --seed 1225
 ```
 
-#### Convert VCF file to numerical genotype matrix
+#### Convert VCF file to numeric genotype matrix
 ```bash
 ## Covert genotypes to numeric
 python3 vcf_to_nmatrix.py \
