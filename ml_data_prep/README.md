@@ -5,25 +5,8 @@ To perform ML analysis with iDEC, VaDE, and SOM, all data types must be combined
 ### Data Needed
 
 * Morphology/Environment data in CSV file
-* DNA sequences in FASTA file
+* Genotype matrix in CSV file
 * A popmap file containing the population assignment of each sample
-
-### Filter datasets
-```bash
-python3 filter_data.py \
---input_csv  s1_tip_traits.csv\
---input_fasta  s1_diploid_snp_masked.fasta\
---id_column ID \
---output_csv filtered_morph.csv \
---output_fasta filtered_dna.fasta
-```
-
-### Convert fasta file to one-hot encoding
-```bash
-python fasta_to_onehot.py \
---input filtered_dna.fasta \
---output filtered_dna_one_hot.csv
-```
 
 ### Concatenate all data types
 ```bash
@@ -32,6 +15,7 @@ python3 concat_data.py \
 --input_2 filtered_dna_one_hot.csv \
 --output concat_matrix.csv
 ```
+
 ### Replace IDs with population label
 ```bash
 python3 replace_ids.py \
