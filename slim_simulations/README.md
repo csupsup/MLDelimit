@@ -18,7 +18,7 @@ python3 reconstruct_diploid_seq.py \
 
 ```
 
-#### Set missing data on FASTA sequence
+#### Set missing data in FASTA sequence
 ```bash
 ## Randomly set missing nucleotides (either single or blocks)
 python3 set_fasta_missing.py \
@@ -27,7 +27,7 @@ python3 set_fasta_missing.py \
 --percent 10  --cblock 10 --limit 10 --single_prob 0.5
 ```
 
-#### Set missing data on VCF file
+#### Set missing data in VCF file
 ```bash
 ## Ramdomly set missing genotype (e.g., 10%)
 python3 set_vcf_missing.py \
