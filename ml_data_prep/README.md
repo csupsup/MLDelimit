@@ -11,8 +11,8 @@ To perform ML analysis with iDEC, VaDE, and SOM, all data types must be combined
 ### Concatenate all data types
 ```bash
 python3 concat_data.py \
---input_1 filtered_morph.csv \
---input_2 filtered_dna_one_hot.csv \
+--input_1 s1_tip_traits.csv \
+--input_2 s1_gen_mat.csv \
 --output concat_matrix.csv
 ```
 
