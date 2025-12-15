@@ -18,30 +18,29 @@ python3 reconstruct_diploid_seq.py \
 
 ```
 
-#### Set missing data on full sequence
+#### Set missing data on FASTA sequence
 ```bash
-## Set missing data on full sequence
-python3 set_missing_data.py \
+## Randomly set missing nucleotides (either single or blocks)
+python3 set_fasta_missing.py \
 --input diploid_seq.fasta \
 --output diploid_seq_masked.fasta \
 --percent 10  --cblock 10 --limit 10 --single_prob 0.5
 ```
 
-#### Remove invariant sites to get SNPs
+#### Set missing data on VCF file
 ```bash
-## Remove invariant sites
-python3 remove_invar_from_fasta.py \
---input diploid_seq.fasta \
---output diploid_snp.fasta
-
+## Ramdomly set missing genotype (e.g., 10%)
+python3 set_vcf_missing.py \
+--input s1_sampled_snps.vcf \
+--output output.vcf \
+--miss_genotype 0.10 \
+--seed 1225
 ```
 
-#### Set missing data on SNPs
+#### Convert VCF file to numerical genotype matrix
 ```bash
-## Remove missing data on snps
-python3 set_missing_data.py \
---input s2_final_data_08Dec2025/diploid_snp.fasta \
---output s2_final_data_08Dec2025/diploid_snp_masked.fasta \
---percent 10  --cblock 10 --limit 10 --single_prob 0.5
-
+## Covert genotypes to numeric
+python3 vcf_to_nmatrix.py \
+--input s1_sampled_snps.vcf \
+--output s1_gen_mat.csv
 ```
