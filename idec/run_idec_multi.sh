@@ -24,7 +24,7 @@ for LR in "${LEARNING_RATES[@]}"; do
       --learning_rate "$LR" \
       --batch_size 16 \
       --k_min 2 \
-      --k_max 13 \
+      --k_max 5 \
       --wrap_width 30 \
       > "$LOG" 2>&1; then
     echo "Run with learning_rate=${LR} succeeded."
