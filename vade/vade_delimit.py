@@ -646,7 +646,7 @@ for ab_set in ablation_sets[1:]:
             print(f"[Ablation {tag} VaDE] Epoch {epoch}: Loss {total_loss:.6f} (β={beta:.2f})")
     
     ## Write VaDE training loss
-    ab_train_csv = os.path.join(args.plots_dir, f"ablation_{tag}_vade_train_loss.csv")
+    ab_train_csv = os.path.join(args.plots_dir, f"vade_loss_history_{tag}.csv")
     pd.DataFrame({"epoch": np.arange(1,args.vade_epochs+1), "loss": ab_train_loss_history}).to_csv(ab_train_csv, index=False)
     print(f"Ablation {tag} VaDE training loss written to: {ab_train_csv}")
     
