@@ -41,14 +41,15 @@ parser.add_argument("--plots_dir", type=str, default="./plots", help="Directory 
 parser.add_argument("--is_binary", action="store_true", help="Whether input data is binary.")
 parser.add_argument("--k_min", type=int, default=2, help="Minimum K to test in GMM BIC search.")
 parser.add_argument("--k_max", type=int, default=10, help="Maximum K to test in GMM BIC search.")
+parser.add_argument("--seed", type=int, default=1225, help="Set seed.")
 args = parser.parse_args()
 
 ## Settings
 os.makedirs(args.plots_dir, exist_ok=True)
 device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
 print("\nUsing device:", device)
-torch.manual_seed(1225)
-np.random.seed(1225)
+torch.manual_seed(args.seed)
+np.random.seed(args.seed)
 wrap_width = 40
 
 ## GMM parameters (default)
@@ -72,6 +73,7 @@ print(f"GMM Reg Covar Init:   {reg_covar_init}")
 print(f"GMM Min Covar:        {min_covar}")
 print(f"Wrap Width:           {wrap_width}")
 print(f"K Range:              {args.k_min}–{args.k_max-1}")
+print(f"Seed:                 {args.seed}")
 print(f"Device:               {device}")
 print("---\n")
 
@@ -139,6 +141,9 @@ class PlainVAE(nn.Module):
 vae = PlainVAE(input_dim, args.hidden_dims, args.latent_dim).to(device)
 optimizer = torch.optim.Adam(vae.parameters(), lr=args.pretrain_lr)
 
+## Store VAE pretrain losses
+pretrain_loss_history = []  
+
 print("Pretraining VAE (reconstruction + KL only)...")
 for epoch in range(1, args.pretrain_epochs + 1):
     vae.train()
@@ -153,7 +158,13 @@ for epoch in range(1, args.pretrain_epochs + 1):
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
+    pretrain_loss_history.append(total_loss)
     print(f"Pretrain Epoch {epoch}: Loss {total_loss:.6f}")
+
+## Write pretrain loss history
+pretrain_loss_df = pd.DataFrame({"epoch": np.arange(1,args.pretrain_epochs+1), "loss": pretrain_loss_history})
+pretrain_loss_df.to_csv(os.path.join(args.plots_dir,"vae_pretrain_loss_history_full_FINAL.csv"), index=False)
+print("VAE pretrain loss history saved.")
 
 ## Find optimal K using GMM BIC
 vae.eval()
@@ -198,8 +209,10 @@ class VaDE(nn.Module):
 
 model = VaDE(input_dim, args.hidden_dims, args.latent_dim, best_k).to(device)
 
-## Pretrain VaDE encoder and decoder
+## Pretrain VaDE
 pretrain_optimizer = torch.optim.Adam(list(model.encoder.parameters()) + list(model.decoder.parameters()), lr=args.pretrain_lr)
+vade_pretrain_loss_history = []
+
 for epoch in range(1, args.pretrain_epochs + 1):
     model.train()
     total_loss = 0.0
@@ -213,7 +226,13 @@ for epoch in range(1, args.pretrain_epochs + 1):
         loss.backward()
         pretrain_optimizer.step()
         total_loss += loss.item()
+    vade_pretrain_loss_history.append(total_loss)
     print(f"[Pretrain] Epoch {epoch}: Loss {total_loss:.6f}")
+
+## Write pretrain loss
+vade_pretrain_loss_df = pd.DataFrame({"epoch": np.arange(1,args.pretrain_epochs+1), "loss": vade_pretrain_loss_history})
+vade_pretrain_loss_df.to_csv(os.path.join(args.plots_dir,"vade_pretrain_loss_history_full_FINAL.csv"), index=False)
+print("VaDE pretrain loss history saved.")
 
 ## GMM Initialization using optimal K
 model.eval()
@@ -233,6 +252,8 @@ print("GMM initialization completed.")
 
 ## VaDE Training
 optimizer = torch.optim.Adam(model.parameters(), lr=args.vade_lr)
+vade_train_loss_history = []
+
 for epoch in range(1, args.vade_epochs + 1):
     model.train()
     total_loss = 0.0
@@ -258,8 +279,14 @@ for epoch in range(1, args.vade_epochs + 1):
         loss_batch.backward()
         optimizer.step()
         total_loss += loss_batch.item()
+    vade_train_loss_history.append(total_loss)
     if epoch % 10 == 0 or epoch == 1:
         print(f"VaDE Epoch {epoch}: Loss {total_loss:.6f} (β={beta:.2f})")
+
+## Write full VaDE training loss
+vade_train_loss_df = pd.DataFrame({"epoch": np.arange(1,args.vade_epochs+1), "loss": vade_train_loss_history})
+vade_train_loss_df.to_csv(os.path.join(args.plots_dir,"vade_loss_history_full_FINAL.csv"), index=False)
+print("VaDE training loss history saved.")
 
 ## Cluster extraction and plotting functions
 def log_sum_exp(a, dim=-1):
@@ -535,42 +562,133 @@ for m in mods:
     ablation_sets.append((m,))
 
 X_full_array = np.array(df.drop(columns=[args.id_col]))
+
+## Ablation studies with full pretrain + VaDE training and loss logging
 summary_rows = []
-summary_rows.append({"ablation":"full","ari_vs_full":1.0,"nmi_vs_full":1.0})
+summary_rows.append({"ablation":"full","ari_vs_full":1.0,"nmi_vs_full":1.0,
+                     "pretrain_loss_csv":"na","train_loss_csv":"na"})
 
 for ab_set in ablation_sets[1:]:
     tag = "_".join(ab_set)
+    print(f"\nStarting ablation: {tag}")
+    
+    ## Prepare ablation dataset
     X_ab = np.zeros_like(X_full_array)
     for m in ab_set:
         X_ab[:, modalities_full[m]['cols']] = X_full_array[:, modalities_full[m]['cols']]
     dataset_ab = TensorDataset(torch.from_numpy(X_ab.astype(np.float32)))
-    loader_ab = DataLoader(dataset_ab, batch_size=args.batch_size, shuffle=False)
+    loader_ab = DataLoader(dataset_ab, batch_size=args.batch_size, shuffle=True)
     
-    latent_ab, clusters_ab = compute_clusters(model, loader_ab)
-
+    ## Initialize ablation model
+    ab_model = VaDE(input_dim, args.hidden_dims, args.latent_dim, best_k).to(device)
+    
+    ## Pretrain encoder + decoder
+    ab_pretrain_optimizer = torch.optim.Adam(list(ab_model.encoder.parameters()) + list(ab_model.decoder.parameters()), lr=args.pretrain_lr)
+    ab_pretrain_loss_history = []
+    for epoch in range(1, args.pretrain_epochs + 1):
+        ab_model.train()
+        total_loss = 0.0
+        for xb_tuple in loader_ab:
+            xb = xb_tuple[0].to(device)
+            xr, z, mu, logvar = ab_model(xb)
+            recon = F.binary_cross_entropy_with_logits(xr, xb, reduction='sum')/xb.size(0) if args.is_binary else F.mse_loss(xr, xb, reduction='sum')/xb.size(0)
+            kl = -0.5*torch.sum(1 + logvar - mu.pow(2) - logvar.exp())/xb.size(0)
+            loss = recon + kl
+            ab_pretrain_optimizer.zero_grad()
+            loss.backward()
+            ab_pretrain_optimizer.step()
+            total_loss += loss.item()
+        ab_pretrain_loss_history.append(total_loss)
+        if epoch % 10 == 0 or epoch == 1:
+            print(f"[Ablation {tag} Pretrain] Epoch {epoch}: Loss {total_loss:.6f}")
+    
+    ## Write pretrain loss
+    ab_pretrain_csv = os.path.join(args.plots_dir, f"pretrain_loss_history_{tag}.csv")
+    pd.DataFrame({"epoch": np.arange(1,args.pretrain_epochs+1), "loss": ab_pretrain_loss_history}).to_csv(ab_pretrain_csv, index=False)
+    print(f"Ablation {tag} pretrain loss written to: {ab_pretrain_csv}")
+    
+    ## Initialize GMM parameters from full model
+    with torch.no_grad():
+        ab_model.pi_logit.copy_(model.pi_logit)
+        ab_model.mu_c.copy_(model.mu_c)
+        ab_model.logvar_c.copy_(model.logvar_c)
+    
+    ## VaDE training
+    ab_train_optimizer = torch.optim.Adam(ab_model.parameters(), lr=args.vade_lr)
+    ab_train_loss_history = []
+    for epoch in range(1, args.vade_epochs + 1):
+        ab_model.train()
+        total_loss = 0.0
+        beta = min(1.0, epoch / args.beta_anneal_epochs)
+        for xb_tuple in loader_ab:
+            xb = xb_tuple[0].to(device)
+            xr, z, mu, logvar = ab_model(xb)
+            batch = xb.size(0)
+            recon_loss = F.binary_cross_entropy_with_logits(xr, xb, reduction="sum")/batch if args.is_binary else F.mse_loss(xr, xb, reduction="sum")/batch
+            z_exp = z.unsqueeze(1)
+            mu_c = ab_model.mu_c.unsqueeze(0)
+            logvar_c = ab_model.logvar_c.unsqueeze(0)
+            log_p_z_given_c = -0.5*(torch.sum(logvar_c + (z_exp - mu_c)**2 / torch.exp(logvar_c), dim=2) + args.latent_dim*math.log(2*math.pi))
+            log_pi = torch.log_softmax(ab_model.pi_logit, dim=0).unsqueeze(0)
+            log_pzc = log_pi + log_p_z_given_c
+            log_pz = torch.logsumexp(log_pzc, dim=1)
+            const_term = args.latent_dim*(1+math.log(2*math.pi))
+            E_log_q = -0.5*(const_term + torch.sum(logvar, dim=1))
+            kl_per_sample = E_log_q - log_pz
+            kl_term = torch.mean(kl_per_sample)
+            loss_batch = recon_loss + beta*kl_term
+            ab_train_optimizer.zero_grad()
+            loss_batch.backward()
+            ab_train_optimizer.step()
+            total_loss += loss_batch.item()
+        ab_train_loss_history.append(total_loss)
+        if epoch % 10 == 0 or epoch == 1:
+            print(f"[Ablation {tag} VaDE] Epoch {epoch}: Loss {total_loss:.6f} (β={beta:.2f})")
+    
+    ## Write VaDE training loss
+    ab_train_csv = os.path.join(args.plots_dir, f"ablation_{tag}_vade_train_loss.csv")
+    pd.DataFrame({"epoch": np.arange(1,args.vade_epochs+1), "loss": ab_train_loss_history}).to_csv(ab_train_csv, index=False)
+    print(f"Ablation {tag} VaDE training loss written to: {ab_train_csv}")
+    
+    ## Compute clusters after fine-tuning
+    loader_ab_eval = DataLoader(dataset_ab, batch_size=args.batch_size, shuffle=False)
+    latent_ab, clusters_ab = compute_clusters(ab_model, loader_ab_eval)
+    
+    ## Clean latent
     latent_ab = np.nan_to_num(latent_ab, nan=0.0, posinf=1e6, neginf=-1e6)
     valid_mask = np.isfinite(latent_ab).all(axis=1)
     latent_ab = latent_ab[valid_mask]
     clusters_ab = clusters_ab[valid_mask]
     ids_clean = np.array(ids)[valid_mask]
-
+    
+    # Write ablation latent
     export_df_ab = pd.DataFrame(latent_ab, columns=[f"latent_{i+1}" for i in range(latent_ab.shape[1])])
     export_df_ab["cluster"] = clusters_ab
     export_df_ab["ID"] = ids_clean
     export_path_ab = os.path.join(args.plots_dir, f"latent_ablation_{tag}_data.csv")
     export_df_ab.to_csv(export_path_ab, index=False)
     print(f"Ablation latent data written to: {export_path_ab}")
-
+    
+    ## Plot embedding
     plot_embedding_combined(latent_ab, ids_clean, clusters_ab, y_true=ids_clean, tag=f"ablation_{tag}")
-
+    
+    ## ARI and NMI vs full model
     ari = adjusted_rand_score(clusters_full, clusters_ab)
     nmi = normalized_mutual_info_score(clusters_full, clusters_ab)
-    summary_rows.append({"ablation":tag,"ari_vs_full":ari,"nmi_vs_full":nmi})
+    summary_rows.append({
+        "ablation": tag,
+        "ari_vs_full": ari,
+        "nmi_vs_full": nmi,
+        "pretrain_loss_csv": ab_pretrain_csv,
+        "train_loss_csv": ab_train_csv
+    })
     print(f"Ablation {tag}: ARI={ari:.4f}, NMI={nmi:.4f}")
 
+## Write ablation summary
 summary_df = pd.DataFrame(summary_rows)
 summary_df.to_csv(os.path.join(args.plots_dir, "ablation_summary.csv"), index=False)
 print("All ablations done, summary saved.")
+
 
 ## ARI and NMI bar charts
 def save_ari_nmi_barchart(summary_df, outpath):
