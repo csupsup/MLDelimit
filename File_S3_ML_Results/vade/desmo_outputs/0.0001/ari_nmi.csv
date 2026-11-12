@@ -1,0 +1,8 @@
+ablation,ari_vs_full,nmi_vs_full,pretrain_loss_csv,train_loss_csv
+full,1.0,1.0,na,na
+dna_env,0.0,0.0,seal_outputs/0.0001/pretrain_loss_history_dna_env.csv,seal_outputs/0.0001/vade_loss_history_dna_env.csv
+dna_morph,0.0,0.0,seal_outputs/0.0001/pretrain_loss_history_dna_morph.csv,seal_outputs/0.0001/vade_loss_history_dna_morph.csv
+env_morph,0.0,0.0,seal_outputs/0.0001/pretrain_loss_history_env_morph.csv,seal_outputs/0.0001/vade_loss_history_env_morph.csv
+dna,0.0,0.0,seal_outputs/0.0001/pretrain_loss_history_dna.csv,seal_outputs/0.0001/vade_loss_history_dna.csv
+env,0.0,0.0,seal_outputs/0.0001/pretrain_loss_history_env.csv,seal_outputs/0.0001/vade_loss_history_env.csv
+morph,0.0,0.0,seal_outputs/0.0001/pretrain_loss_history_morph.csv,seal_outputs/0.0001/vade_loss_history_morph.csv

@@ -1,0 +1,28 @@
+# output
+output_directory = merge_res/
+
+# input files
+Imapfile = gono_hhsd_popmap.txt
+seqfile = gono_radloci.txt
+phase = 1
+
+# guide tree
+guide_tree = (((Bohol,Samar_Leyte),(((Camiguin,SE_Mindanao),NE_Mindanao),W_Mindanao)),((Cebu,(Luzon_Polillo,Negros_Panay)),(Mindoro,Romblon)));
+
+# hierarchical algorithm settings
+mode = merge
+gdi_threshold = <=0.3, <=1.0
+
+# migration patterns
+migration = {NE_Mindanao <-> SE_Mindanao,
+		NE_Mindanao <-> W_Mindanao,
+		W_Mindanao <-> SE_Mindanao}
+
+migprior = 0.1 10
+thetaprior = 3 0.04 e
+tauprior = 3 0.02
+
+# BPP MCMC settings
+threads = 6
+burnin = 5000
+nsample = 20000

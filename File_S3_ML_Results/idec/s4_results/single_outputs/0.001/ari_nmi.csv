@@ -1,0 +1,5 @@
+ablation,ari_vs_full,nmi_vs_full,silhouette,chosen_k
+full,1.0,1.0,0.8057805299758911,2
+morph_dna,1.0,1.0,0.7482052445411682,2
+morph,1.0,1.0,0.7584704756736755,2
+dna,1.0,1.0,0.824207603931427,2

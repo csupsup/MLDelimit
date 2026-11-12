@@ -1,0 +1,322 @@
+
+Using device: mps
+
+--- VaDE Settings ---
+Input CSV:            seal_concat_matrix_final.csv
+Plots Dir:            seal_outputs/0.0001
+ID Column:            ID
+Latent Dim:           7
+Hidden Dims:          [50, 50, 200]
+Batch Size:           16
+Pretrain Epochs:      50
+VaDE Epochs:          100
+Pretrain LR:          0.0001
+VaDE LR:              0.0001
+Beta Anneal Epochs:   30
+Binary Input:         False
+GMM Reg Covar Init:   0.001
+GMM Min Covar:        0.001
+Wrap Width:           40
+K Range:              2–4
+Seed:                 1225
+Device:               mps
+---
+
+Loading dataset...
+Loaded 71 samples, input_dim=15645
+Pretraining VAE (reconstruction + KL only)...
+Pretrain Epoch 1: Loss 78887.267578
+Pretrain Epoch 2: Loss 76633.510742
+Pretrain Epoch 3: Loss 78677.571289
+Pretrain Epoch 4: Loss 82154.763672
+Pretrain Epoch 5: Loss 76786.071289
+Pretrain Epoch 6: Loss 79443.731445
+Pretrain Epoch 7: Loss 78105.962891
+Pretrain Epoch 8: Loss 80766.379883
+Pretrain Epoch 9: Loss 80060.715820
+Pretrain Epoch 10: Loss 77170.486328
+Pretrain Epoch 11: Loss 80385.139648
+Pretrain Epoch 12: Loss 78296.802734
+Pretrain Epoch 13: Loss 77401.791016
+Pretrain Epoch 14: Loss 77181.791992
+Pretrain Epoch 15: Loss 77257.410156
+Pretrain Epoch 16: Loss 77540.812500
+Pretrain Epoch 17: Loss 79645.996094
+Pretrain Epoch 18: Loss 77412.026367
+Pretrain Epoch 19: Loss 76165.686523
+Pretrain Epoch 20: Loss 77569.391602
+Pretrain Epoch 21: Loss 78277.395508
+Pretrain Epoch 22: Loss 78041.845703
+Pretrain Epoch 23: Loss 77924.002930
+Pretrain Epoch 24: Loss 78073.817383
+Pretrain Epoch 25: Loss 80624.796875
+Pretrain Epoch 26: Loss 80344.299805
+Pretrain Epoch 27: Loss 82467.932617
+Pretrain Epoch 28: Loss 79550.189453
+Pretrain Epoch 29: Loss 78072.025391
+Pretrain Epoch 30: Loss 78091.897461
+Pretrain Epoch 31: Loss 77904.470703
+Pretrain Epoch 32: Loss 80784.327148
+Pretrain Epoch 33: Loss 78399.597656
+Pretrain Epoch 34: Loss 80543.368164
+Pretrain Epoch 35: Loss 77591.632812
+Pretrain Epoch 36: Loss 76407.239258
+Pretrain Epoch 37: Loss 76377.166992
+Pretrain Epoch 38: Loss 78487.304688
+Pretrain Epoch 39: Loss 77667.481445
+Pretrain Epoch 40: Loss 75479.470703
+Pretrain Epoch 41: Loss 77989.646484
+Pretrain Epoch 42: Loss 77675.152344
+Pretrain Epoch 43: Loss 78599.194336
+Pretrain Epoch 44: Loss 76128.896484
+Pretrain Epoch 45: Loss 79238.996094
+Pretrain Epoch 46: Loss 76885.104492
+Pretrain Epoch 47: Loss 78882.974609
+Pretrain Epoch 48: Loss 76687.162109
+Pretrain Epoch 49: Loss 77258.750000
+Pretrain Epoch 50: Loss 77358.460938
+VAE pretrain loss history saved.
+Optimal K via BIC: 2
+[Pretrain] Epoch 1: Loss 81092.563477
+[Pretrain] Epoch 2: Loss 79343.866211
+[Pretrain] Epoch 3: Loss 79092.919922
+[Pretrain] Epoch 4: Loss 78173.175781
+[Pretrain] Epoch 5: Loss 76547.554688
+[Pretrain] Epoch 6: Loss 78712.166016
+[Pretrain] Epoch 7: Loss 79472.116211
+[Pretrain] Epoch 8: Loss 81915.673828
+[Pretrain] Epoch 9: Loss 78667.471680
+[Pretrain] Epoch 10: Loss 79758.500000
+[Pretrain] Epoch 11: Loss 76857.530273
+[Pretrain] Epoch 12: Loss 82893.719727
+[Pretrain] Epoch 13: Loss 77139.909180
+[Pretrain] Epoch 14: Loss 80076.982422
+[Pretrain] Epoch 15: Loss 77705.832031
+[Pretrain] Epoch 16: Loss 76678.231445
+[Pretrain] Epoch 17: Loss 79436.348633
+[Pretrain] Epoch 18: Loss 76547.762695
+[Pretrain] Epoch 19: Loss 77644.978516
+[Pretrain] Epoch 20: Loss 78712.931641
+[Pretrain] Epoch 21: Loss 81396.925781
+[Pretrain] Epoch 22: Loss 75969.317383
+[Pretrain] Epoch 23: Loss 78655.178711
+[Pretrain] Epoch 24: Loss 77718.456055
+[Pretrain] Epoch 25: Loss 78658.231445
+[Pretrain] Epoch 26: Loss 78873.364258
+[Pretrain] Epoch 27: Loss 75979.157227
+[Pretrain] Epoch 28: Loss 78634.352539
+[Pretrain] Epoch 29: Loss 77333.973633
+[Pretrain] Epoch 30: Loss 77200.115234
+[Pretrain] Epoch 31: Loss 78242.455078
+[Pretrain] Epoch 32: Loss 78162.588867
+[Pretrain] Epoch 33: Loss 76253.724609
+[Pretrain] Epoch 34: Loss 81292.158203
+[Pretrain] Epoch 35: Loss 79960.430664
+[Pretrain] Epoch 36: Loss 77430.714844
+[Pretrain] Epoch 37: Loss 80476.846680
+[Pretrain] Epoch 38: Loss 76458.802734
+[Pretrain] Epoch 39: Loss 76482.219727
+[Pretrain] Epoch 40: Loss 76870.808594
+[Pretrain] Epoch 41: Loss 77784.849609
+[Pretrain] Epoch 42: Loss 76567.061523
+[Pretrain] Epoch 43: Loss 77646.658203
+[Pretrain] Epoch 44: Loss 77487.736328
+[Pretrain] Epoch 45: Loss 76761.235352
+[Pretrain] Epoch 46: Loss 76099.375000
+[Pretrain] Epoch 47: Loss 76721.543945
+[Pretrain] Epoch 48: Loss 76371.248047
+[Pretrain] Epoch 49: Loss 78465.896484
+[Pretrain] Epoch 50: Loss 78216.427734
+VaDE pretrain loss history saved.
+GMM initialization completed.
+VaDE Epoch 1: Loss 74486.839844 (β=0.03)
+VaDE Epoch 10: Loss 75334.581055 (β=0.33)
+VaDE Epoch 20: Loss 76276.446289 (β=0.67)
+VaDE Epoch 30: Loss 74472.426758 (β=1.00)
+VaDE Epoch 40: Loss 74648.322266 (β=1.00)
+VaDE Epoch 50: Loss 73480.972656 (β=1.00)
+VaDE Epoch 60: Loss 70341.691406 (β=1.00)
+VaDE Epoch 70: Loss 73363.633789 (β=1.00)
+VaDE Epoch 80: Loss 70644.253906 (β=1.00)
+VaDE Epoch 90: Loss 69265.999023 (β=1.00)
+VaDE Epoch 100: Loss 71761.300781 (β=1.00)
+VaDE training loss history saved.
+Full-model latent data written to: seal_outputs/0.0001/latent_full_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_full_model.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_full_model_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_full_model.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_full_model_points.csv
+Soft assignments plot written to: seal_outputs/0.0001/soft_assignments_stacked.pdf
+Soft assignments CSV written to: seal_outputs/0.0001/soft_assignments.csv
+
+Starting ablation: dna_env
+[Ablation dna_env Pretrain] Epoch 1: Loss 45948610.000000
+[Ablation dna_env Pretrain] Epoch 10: Loss 45333958.500000
+[Ablation dna_env Pretrain] Epoch 20: Loss 41475152.000000
+[Ablation dna_env Pretrain] Epoch 30: Loss 41560927.000000
+[Ablation dna_env Pretrain] Epoch 40: Loss 40539645.000000
+[Ablation dna_env Pretrain] Epoch 50: Loss 23085155.500000
+Ablation dna_env pretrain loss written to: seal_outputs/0.0001/pretrain_loss_history_dna_env.csv
+[Ablation dna_env VaDE] Epoch 1: Loss 23342698.750000 (β=0.03)
+[Ablation dna_env VaDE] Epoch 10: Loss 13886593.625000 (β=0.33)
+[Ablation dna_env VaDE] Epoch 20: Loss 9341523.812500 (β=0.67)
+[Ablation dna_env VaDE] Epoch 30: Loss 7529627.625000 (β=1.00)
+[Ablation dna_env VaDE] Epoch 40: Loss 4730518.625000 (β=1.00)
+[Ablation dna_env VaDE] Epoch 50: Loss 3836046.000000 (β=1.00)
+[Ablation dna_env VaDE] Epoch 60: Loss 3735763.062500 (β=1.00)
+[Ablation dna_env VaDE] Epoch 70: Loss 3576793.812500 (β=1.00)
+[Ablation dna_env VaDE] Epoch 80: Loss 3181037.187500 (β=1.00)
+[Ablation dna_env VaDE] Epoch 90: Loss 3497836.062500 (β=1.00)
+[Ablation dna_env VaDE] Epoch 100: Loss 3140760.031250 (β=1.00)
+Ablation dna_env VaDE training loss written to: seal_outputs/0.0001/vade_loss_history_dna_env.csv
+Ablation latent data written to: seal_outputs/0.0001/latent_ablation_dna_env_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_dna_env.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_dna_env_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_dna_env.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_dna_env_points.csv
+Ablation dna_env: ARI=0.0000, NMI=0.0000
+
+Starting ablation: dna_morph
+[Ablation dna_morph Pretrain] Epoch 1: Loss 424953.492188
+[Ablation dna_morph Pretrain] Epoch 10: Loss 388273.218750
+[Ablation dna_morph Pretrain] Epoch 20: Loss 270954.671875
+[Ablation dna_morph Pretrain] Epoch 30: Loss 175876.392578
+[Ablation dna_morph Pretrain] Epoch 40: Loss 125268.630859
+[Ablation dna_morph Pretrain] Epoch 50: Loss 98871.843750
+Ablation dna_morph pretrain loss written to: seal_outputs/0.0001/pretrain_loss_history_dna_morph.csv
+[Ablation dna_morph VaDE] Epoch 1: Loss 95712.738281 (β=0.03)
+[Ablation dna_morph VaDE] Epoch 10: Loss 89108.681641 (β=0.33)
+[Ablation dna_morph VaDE] Epoch 20: Loss 84531.887695 (β=0.67)
+[Ablation dna_morph VaDE] Epoch 30: Loss 82439.269531 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 40: Loss 79436.373047 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 50: Loss 82703.188477 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 60: Loss 83806.172852 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 70: Loss 79781.454102 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 80: Loss 80741.099609 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 90: Loss 80666.306641 (β=1.00)
+[Ablation dna_morph VaDE] Epoch 100: Loss 78332.180664 (β=1.00)
+Ablation dna_morph VaDE training loss written to: seal_outputs/0.0001/vade_loss_history_dna_morph.csv
+Ablation latent data written to: seal_outputs/0.0001/latent_ablation_dna_morph_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_dna_morph.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_dna_morph_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_dna_morph.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_dna_morph_points.csv
+Ablation dna_morph: ARI=0.0000, NMI=0.0000
+
+Starting ablation: env_morph
+[Ablation env_morph Pretrain] Epoch 1: Loss 49704581.000000
+[Ablation env_morph Pretrain] Epoch 10: Loss 45575197.000000
+[Ablation env_morph Pretrain] Epoch 20: Loss 41069650.000000
+[Ablation env_morph Pretrain] Epoch 30: Loss 45309741.000000
+[Ablation env_morph Pretrain] Epoch 40: Loss 43887924.500000
+[Ablation env_morph Pretrain] Epoch 50: Loss 35458733.250000
+Ablation env_morph pretrain loss written to: seal_outputs/0.0001/pretrain_loss_history_env_morph.csv
+[Ablation env_morph VaDE] Epoch 1: Loss 34829558.250000 (β=0.03)
+[Ablation env_morph VaDE] Epoch 10: Loss 34424683.500000 (β=0.33)
+[Ablation env_morph VaDE] Epoch 20: Loss 28165674.500000 (β=0.67)
+[Ablation env_morph VaDE] Epoch 30: Loss 16513808.750000 (β=1.00)
+[Ablation env_morph VaDE] Epoch 40: Loss 7863805.875000 (β=1.00)
+[Ablation env_morph VaDE] Epoch 50: Loss 4714199.406250 (β=1.00)
+[Ablation env_morph VaDE] Epoch 60: Loss 4107593.187500 (β=1.00)
+[Ablation env_morph VaDE] Epoch 70: Loss 3906495.375000 (β=1.00)
+[Ablation env_morph VaDE] Epoch 80: Loss 3473824.500000 (β=1.00)
+[Ablation env_morph VaDE] Epoch 90: Loss 3176309.625000 (β=1.00)
+[Ablation env_morph VaDE] Epoch 100: Loss 3140849.500000 (β=1.00)
+Ablation env_morph VaDE training loss written to: seal_outputs/0.0001/vade_loss_history_env_morph.csv
+Ablation latent data written to: seal_outputs/0.0001/latent_ablation_env_morph_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_env_morph.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_env_morph_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_env_morph.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_env_morph_points.csv
+Ablation env_morph: ARI=0.0000, NMI=0.0000
+
+Starting ablation: dna
+[Ablation dna Pretrain] Epoch 1: Loss 428038.585938
+[Ablation dna Pretrain] Epoch 10: Loss 389632.195312
+[Ablation dna Pretrain] Epoch 20: Loss 280086.445312
+[Ablation dna Pretrain] Epoch 30: Loss 174612.646484
+[Ablation dna Pretrain] Epoch 40: Loss 121096.019531
+[Ablation dna Pretrain] Epoch 50: Loss 96626.382812
+Ablation dna pretrain loss written to: seal_outputs/0.0001/pretrain_loss_history_dna.csv
+[Ablation dna VaDE] Epoch 1: Loss 94522.634766 (β=0.03)
+[Ablation dna VaDE] Epoch 10: Loss 85330.338867 (β=0.33)
+[Ablation dna VaDE] Epoch 20: Loss 80348.147461 (β=0.67)
+[Ablation dna VaDE] Epoch 30: Loss 80625.007812 (β=1.00)
+[Ablation dna VaDE] Epoch 40: Loss 79495.169922 (β=1.00)
+[Ablation dna VaDE] Epoch 50: Loss 83141.272461 (β=1.00)
+[Ablation dna VaDE] Epoch 60: Loss 78823.793945 (β=1.00)
+[Ablation dna VaDE] Epoch 70: Loss 79305.243164 (β=1.00)
+[Ablation dna VaDE] Epoch 80: Loss 81604.725586 (β=1.00)
+[Ablation dna VaDE] Epoch 90: Loss 80852.812500 (β=1.00)
+[Ablation dna VaDE] Epoch 100: Loss 83702.878906 (β=1.00)
+Ablation dna VaDE training loss written to: seal_outputs/0.0001/vade_loss_history_dna.csv
+Ablation latent data written to: seal_outputs/0.0001/latent_ablation_dna_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_dna.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_dna_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_dna.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_dna_points.csv
+Ablation dna: ARI=0.0000, NMI=0.0000
+
+Starting ablation: env
+[Ablation env Pretrain] Epoch 1: Loss 41537253.500000
+[Ablation env Pretrain] Epoch 10: Loss 50027292.000000
+[Ablation env Pretrain] Epoch 20: Loss 45857582.500000
+[Ablation env Pretrain] Epoch 30: Loss 45325907.000000
+[Ablation env Pretrain] Epoch 40: Loss 40819585.500000
+[Ablation env Pretrain] Epoch 50: Loss 46273209.000000
+Ablation env pretrain loss written to: seal_outputs/0.0001/pretrain_loss_history_env.csv
+[Ablation env VaDE] Epoch 1: Loss 38081895.000000 (β=0.03)
+[Ablation env VaDE] Epoch 10: Loss 35199828.500000 (β=0.33)
+[Ablation env VaDE] Epoch 20: Loss 40479053.250000 (β=0.67)
+[Ablation env VaDE] Epoch 30: Loss 31171737.500000 (β=1.00)
+[Ablation env VaDE] Epoch 40: Loss 37567348.000000 (β=1.00)
+[Ablation env VaDE] Epoch 50: Loss 26911307.500000 (β=1.00)
+[Ablation env VaDE] Epoch 60: Loss 29571312.000000 (β=1.00)
+[Ablation env VaDE] Epoch 70: Loss 27899601.750000 (β=1.00)
+[Ablation env VaDE] Epoch 80: Loss 32847939.250000 (β=1.00)
+[Ablation env VaDE] Epoch 90: Loss 33226875.000000 (β=1.00)
+[Ablation env VaDE] Epoch 100: Loss 26684921.000000 (β=1.00)
+Ablation env VaDE training loss written to: seal_outputs/0.0001/vade_loss_history_env.csv
+Ablation latent data written to: seal_outputs/0.0001/latent_ablation_env_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_env.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_env_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_env.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_env_points.csv
+Ablation env: ARI=0.0000, NMI=0.0000
+
+Starting ablation: morph
+[Ablation morph Pretrain] Epoch 1: Loss 714.529236
+[Ablation morph Pretrain] Epoch 10: Loss 511.589180
+[Ablation morph Pretrain] Epoch 20: Loss 412.422989
+[Ablation morph Pretrain] Epoch 30: Loss 302.040707
+[Ablation morph Pretrain] Epoch 40: Loss 182.510468
+[Ablation morph Pretrain] Epoch 50: Loss 99.463230
+Ablation morph pretrain loss written to: seal_outputs/0.0001/pretrain_loss_history_morph.csv
+[Ablation morph VaDE] Epoch 1: Loss 97.594193 (β=0.03)
+[Ablation morph VaDE] Epoch 10: Loss 78.510620 (β=0.33)
+[Ablation morph VaDE] Epoch 20: Loss 79.310158 (β=0.67)
+[Ablation morph VaDE] Epoch 30: Loss 86.051772 (β=1.00)
+[Ablation morph VaDE] Epoch 40: Loss 79.317647 (β=1.00)
+[Ablation morph VaDE] Epoch 50: Loss 62.414808 (β=1.00)
+[Ablation morph VaDE] Epoch 60: Loss 45.703947 (β=1.00)
+[Ablation morph VaDE] Epoch 70: Loss 22.516266 (β=1.00)
+[Ablation morph VaDE] Epoch 80: Loss 16.282073 (β=1.00)
+[Ablation morph VaDE] Epoch 90: Loss 14.626784 (β=1.00)
+[Ablation morph VaDE] Epoch 100: Loss 12.734711 (β=1.00)
+Ablation morph VaDE training loss written to: seal_outputs/0.0001/vade_loss_history_morph.csv
+Ablation latent data written to: seal_outputs/0.0001/latent_ablation_morph_data.csv
+Cleaned latent: 71 valid samples out of 71
+Written plot to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_morph.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_pca_combined_ellipses_ablation_morph_points.csv
+Written plot to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_morph.pdf
+Embedding CSV written to: seal_outputs/0.0001/latent_tsne_combined_ellipses_ablation_morph_points.csv
+Ablation morph: ARI=0.0000, NMI=0.0000
+All ablations done, summary saved.
+ARI and NMI bar charts written to seal_outputs/0.0001/ablation_ari_nmi_barchart.pdf
+All outputs written to: seal_outputs/0.0001

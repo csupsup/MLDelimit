@@ -1,0 +1,26 @@
+# output
+output_directory = merge_res/
+
+# input files
+Imapfile = desmo_hhsd_popmap.txt
+seqfile = desmo_radloci.txt
+phase = 1
+
+# guide tree
+guide_tree = ((A,C),B);
+
+# hierarchical algorithm settings
+mode = merge
+gdi_threshold = <=0.3, <=1.0
+
+# migration patterns
+migration = {AC<->B}
+
+migprior = 0.2 10
+thetaprior = 3 0.04 e
+tauprior = 3 0.02
+
+# BPP MCMC settings
+threads = 6
+burnin = 5000
+nsample = 20000

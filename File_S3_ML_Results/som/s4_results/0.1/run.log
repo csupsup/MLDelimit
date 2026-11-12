@@ -1,0 +1,65 @@
+/Users/ces/python_tf_env/lib/python3.12/site-packages/sklearn/manifold/_mds.py:677: FutureWarning: The default value of `n_init` will change from 4 to 1 in 1.9.
+  warnings.warn(
+
+--- Hierarchical SOM Settings ---
+Input CSV:        d4_concat_matrix_final.csv
+Outputs Dir:      outputs/0.1
+Iterations:       500
+Sigma:            1.0
+Learning Rate:    0.1
+Batch Size:       8
+MDS Dim:          5
+K Range:          2–4
+Seed:             123
+---
+
+Loading dataset...
+Data types detected: ['Morph', 'DNA'], 120 samples
+SOM grid size: 7x7 (g=54.77, n=120)
+Total data type combinations: 3
+Normalizing data types...
+  Morph: 25 features normalized.
+  DNA: 6026 features normalized.
+  Morph+DNA: 6051 features normalized.
+Using device: mps
+
+--- Training SOM Layer-1 ---
+Processing Layer-1 combo: Morph (shape (120, 25))
+  QE history for Layer-1 combo writtent to Morph
+  Trained SOM for Morph: SOM size 7x7, input_dim=25, neuron_k=3
+Processing Layer-1 combo: DNA (shape (120, 6026))
+  QE history for Layer-1 combo writtent to DNA
+  Trained SOM for DNA: SOM size 7x7, input_dim=6026, neuron_k=5
+Processing Layer-1 combo: Morph+DNA (shape (120, 6051))
+  QE history for Layer-1 combo writtent to Morph+DNA
+  Trained SOM for Morph+DNA: SOM size 7x7, input_dim=6051, neuron_k=3
+
+Finished training all Layer-1 SOMs and collecting outputs.
+
+--- META-LEVEL: compute distance matrices for each Layer-1 output ---
+  Saved distance matrix for Morph (shape (120, 120))
+  Saved distance matrix for DNA (shape (120, 120))
+  Saved distance matrix for Morph+DNA (shape (120, 120))
+
+Fusing distances across Layer-1 outputs (mean fusion)...
+Fused distance matrix written to outputs/0.1/dist_matrix_fused_mean.csv
+
+Applying MDS once on fused distance matrix to 5D meta-embedding...
+Meta-embedding shape: (120, 5)
+
+--- Training Layer-2 (Meta SOM) on MDS meta-embedding ---
+  QE history saved for Layer-2 Meta SOM
+
+--- Training Layer-2 (Meta SOM) on MDS meta-embedding ---
+
+Finished training Meta-SOM.
+
+--- Comparing each Layer-1 ARI and NMI to Meta-SOM ---
+  Morph: ARI=1.0000, NMI=1.0000
+  DNA: ARI=0.0000, NMI=0.0000
+  Morph+DNA: ARI=1.0000, NMI=1.0000
+ARI and NMI summary written to outputs/0.1/ari_nmi_vs_meta.csv
+ARI and NMI bar charts written to outputs/0.1/ari_nmi_vs_meta.pdf
+  QE convergence plot written as outputs/0.1/meta-SOM_qe_convergence.pdf
+SOM tile plot written to 'outputs/0.1/som_tiles.pdf'
+All outputs saved successfully in 'outputs/0.1/'

@@ -1,0 +1,5 @@
+ablation,ari_vs_full,nmi_vs_full,pretrain_loss_csv,train_loss_csv
+full,1.0,1.0,na,na
+dna_morph,0.644052695220518,0.6381841836018581,d4_outputs/0.001/pretrain_loss_history_dna_morph.csv,d4_outputs/0.001/vade_loss_history_dna_morph.csv
+dna,0.0,0.0,d4_outputs/0.001/pretrain_loss_history_dna.csv,d4_outputs/0.001/vade_loss_history_dna.csv
+morph,0.0,0.0,d4_outputs/0.001/pretrain_loss_history_morph.csv,d4_outputs/0.001/vade_loss_history_morph.csv

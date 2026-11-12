@@ -1,0 +1,89 @@
+/Users/ces/python_tf_env/lib/python3.12/site-packages/sklearn/manifold/_mds.py:677: FutureWarning: The default value of `n_init` will change from 4 to 1 in 1.9.
+  warnings.warn(
+
+--- Hierarchical SOM Settings ---
+Input CSV:        bron_concat_matrix_final.csv
+Outputs Dir:      outputs/0.5
+Iterations:       500
+Sigma:            1.0
+Learning Rate:    0.5
+Batch Size:       8
+MDS Dim:          5
+K Range:          2–4
+Seed:             123
+---
+
+Loading dataset...
+Data types detected: ['Morph', 'Env', 'DNA'], 73 samples
+SOM grid size: 7x7 (g=42.72, n=73)
+Total data type combinations: 7
+Normalizing data types...
+  Morph: 24 features normalized.
+  Env: 10 features normalized.
+  DNA: 32454 features normalized.
+  Morph+Env: 34 features normalized.
+  Morph+DNA: 32478 features normalized.
+  Env+DNA: 32464 features normalized.
+  Morph+Env+DNA: 32488 features normalized.
+Using device: mps
+
+--- Training SOM Layer-1 ---
+Processing Layer-1 combo: Morph (shape (73, 24))
+  QE history for Layer-1 combo writtent to Morph
+  Trained SOM for Morph: SOM size 7x7, input_dim=24, neuron_k=3
+Processing Layer-1 combo: Env (shape (73, 10))
+  QE history for Layer-1 combo writtent to Env
+  Trained SOM for Env: SOM size 7x7, input_dim=10, neuron_k=4
+Processing Layer-1 combo: DNA (shape (73, 32454))
+  QE history for Layer-1 combo writtent to DNA
+  Trained SOM for DNA: SOM size 7x7, input_dim=32454, neuron_k=3
+Processing Layer-1 combo: Morph+Env (shape (73, 34))
+  QE history for Layer-1 combo writtent to Morph+Env
+  Trained SOM for Morph+Env: SOM size 7x7, input_dim=34, neuron_k=4
+Processing Layer-1 combo: Morph+DNA (shape (73, 32478))
+  QE history for Layer-1 combo writtent to Morph+DNA
+  Trained SOM for Morph+DNA: SOM size 7x7, input_dim=32478, neuron_k=4
+Processing Layer-1 combo: Env+DNA (shape (73, 32464))
+  QE history for Layer-1 combo writtent to Env+DNA
+  Trained SOM for Env+DNA: SOM size 7x7, input_dim=32464, neuron_k=3
+Processing Layer-1 combo: Morph+Env+DNA (shape (73, 32488))
+  QE history for Layer-1 combo writtent to Morph+Env+DNA
+  Trained SOM for Morph+Env+DNA: SOM size 7x7, input_dim=32488, neuron_k=3
+
+Finished training all Layer-1 SOMs and collecting outputs.
+
+--- META-LEVEL: compute distance matrices for each Layer-1 output ---
+  Saved distance matrix for Morph (shape (73, 73))
+  Saved distance matrix for Env (shape (73, 73))
+  Saved distance matrix for DNA (shape (73, 73))
+  Saved distance matrix for Morph+Env (shape (73, 73))
+  Saved distance matrix for Morph+DNA (shape (73, 73))
+  Saved distance matrix for Env+DNA (shape (73, 73))
+  Saved distance matrix for Morph+Env+DNA (shape (73, 73))
+
+Fusing distances across Layer-1 outputs (mean fusion)...
+Fused distance matrix written to outputs/0.5/dist_matrix_fused_mean.csv
+
+Applying MDS once on fused distance matrix to 5D meta-embedding...
+Meta-embedding shape: (73, 5)
+
+--- Training Layer-2 (Meta SOM) on MDS meta-embedding ---
+  QE history saved for Layer-2 Meta SOM
+
+--- Training Layer-2 (Meta SOM) on MDS meta-embedding ---
+
+Finished training Meta-SOM.
+
+--- Comparing each Layer-1 ARI and NMI to Meta-SOM ---
+  Morph: ARI=0.5314, NMI=0.6229
+  Env: ARI=0.4492, NMI=0.6170
+  DNA: ARI=0.3642, NMI=0.6083
+  Morph+Env: ARI=0.4388, NMI=0.5892
+  Morph+DNA: ARI=0.7963, NMI=0.8611
+  Env+DNA: ARI=0.3642, NMI=0.6083
+  Morph+Env+DNA: ARI=0.3642, NMI=0.6083
+ARI and NMI summary written to outputs/0.5/ari_nmi_vs_meta.csv
+ARI and NMI bar charts written to outputs/0.5/ari_nmi_vs_meta.pdf
+  QE convergence plot written as outputs/0.5/meta-SOM_qe_convergence.pdf
+SOM tile plot written to 'outputs/0.5/som_tiles.pdf'
+All outputs saved successfully in 'outputs/0.5/'
